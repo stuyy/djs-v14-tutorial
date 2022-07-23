@@ -1,6 +1,11 @@
 import { config } from 'dotenv';
 import { Client, GatewayIntentBits, Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
+import OrderCommand from './commands/order.js';
+import RolesCommand from './commands/roles.js';
+import UsersCommand from './commands/user.js';
+import ChannelsCommand from './commands/channel.js';
+import BanCommand from './commands/ban.js';
 
 config();
 
@@ -22,17 +27,21 @@ client.on('ready', () => console.log(`${client.user.tag} has logged in!`));
 
 client.on('interactionCreate', (interaction) => {
   if (interaction.isChatInputCommand()) {
-    console.log('Hello, World');
-    interaction.reply({ content: 'Hey there!!!!!!' });
+    const food = interaction.options.get('food').value;
+    const drink = interaction.options.get('drink').value;
+    interaction.reply({
+      content: `You ordered ${food} and ${drink}`,
+    });
   }
 });
 
 async function main() {
   const commands = [
-    {
-      name: 'order',
-      description: 'Order something...',
-    },
+    OrderCommand,
+    RolesCommand,
+    UsersCommand,
+    ChannelsCommand,
+    BanCommand,
   ];
   try {
     console.log('Started refreshing application (/) commands.');
