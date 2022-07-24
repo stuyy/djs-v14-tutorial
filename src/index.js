@@ -43,9 +43,20 @@ client.on('interactionCreate', (interaction) => {
           { label: 'Sushi', value: 'sushi' },
         ])
       );
+      const actionRowDrinkMenu = new ActionRowBuilder().setComponents(
+        new SelectMenuBuilder().setCustomId('drink_options').setOptions([
+          { label: 'Orange Juice', value: 'orange_juice' },
+          { label: 'Coca-Cola', value: 'coca_cola' },
+        ])
+      );
       interaction.reply({
-        components: [actionRowComponent.toJSON()],
+        components: [actionRowComponent.toJSON(), actionRowDrinkMenu.toJSON()],
       });
+    }
+  } else if (interaction.isSelectMenu()) {
+    if (interaction.customId === 'food_options') {
+      console.log(interaction.component);
+    } else if (interaction.customId === 'drink_options') {
     }
   }
 });
