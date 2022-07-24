@@ -38,9 +38,8 @@ client.on('ready', () => console.log(`${client.user.tag} has logged in!`));
 
 client.on('interactionCreate', (interaction) => {
   if (interaction.isChatInputCommand()) {
+    console.log('Chat Command');
     if (interaction.commandName === 'order') {
-      console.log('Order Command');
-      console.log(interaction);
       const actionRowComponent = new ActionRowBuilder().setComponents(
         new SelectMenuBuilder().setCustomId('food_options').setOptions([
           { label: 'Cake', value: 'cake' },
@@ -85,9 +84,18 @@ client.on('interactionCreate', (interaction) => {
       interaction.showModal(modal);
     }
   } else if (interaction.isSelectMenu()) {
+    console.log('Select Menu');
     if (interaction.customId === 'food_options') {
       console.log(interaction.component);
     } else if (interaction.customId === 'drink_options') {
+    }
+  } else if (interaction.type === InteractionType.ModalSubmit) {
+    console.log('Modal Submitted...');
+    if (interaction.customId === 'registerUserModal') {
+      console.log(interaction.fields.getTextInputValue('username'));
+      interaction.reply({
+        content: 'You successfully submitted your details!',
+      });
     }
   }
 });
