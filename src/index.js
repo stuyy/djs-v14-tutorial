@@ -3,8 +3,12 @@ import {
   ActionRowBuilder,
   Client,
   GatewayIntentBits,
+  InteractionType,
+  ModalBuilder,
   Routes,
   SelectMenuBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import OrderCommand from './commands/order.js';
@@ -12,6 +16,7 @@ import RolesCommand from './commands/roles.js';
 import UsersCommand from './commands/user.js';
 import ChannelsCommand from './commands/channel.js';
 import BanCommand from './commands/ban.js';
+import RegisterCommand from './commands/register.js';
 
 config();
 
@@ -52,6 +57,32 @@ client.on('interactionCreate', (interaction) => {
       interaction.reply({
         components: [actionRowComponent.toJSON(), actionRowDrinkMenu.toJSON()],
       });
+    } else if (interaction.commandName === 'register') {
+      const modal = new ModalBuilder()
+        .setTitle('Register User Form')
+        .setCustomId('registerUserModal')
+        .setComponents(
+          new ActionRowBuilder().setComponents(
+            new TextInputBuilder()
+              .setLabel('username')
+              .setCustomId('username')
+              .setStyle(TextInputStyle.Short)
+          ),
+          new ActionRowBuilder().setComponents(
+            new TextInputBuilder()
+              .setLabel('email')
+              .setCustomId('email')
+              .setStyle(TextInputStyle.Short)
+          ),
+          new ActionRowBuilder().setComponents(
+            new TextInputBuilder()
+              .setLabel('comment')
+              .setCustomId('comment')
+              .setStyle(TextInputStyle.Paragraph)
+          )
+        );
+
+      interaction.showModal(modal);
     }
   } else if (interaction.isSelectMenu()) {
     if (interaction.customId === 'food_options') {
@@ -68,6 +99,7 @@ async function main() {
     UsersCommand,
     ChannelsCommand,
     BanCommand,
+    RegisterCommand,
   ];
   try {
     console.log('Started refreshing application (/) commands.');
