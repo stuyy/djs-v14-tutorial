@@ -1,5 +1,11 @@
 import { config } from 'dotenv';
-import { Client, GatewayIntentBits, Routes } from 'discord.js';
+import {
+  ActionRowBuilder,
+  Client,
+  GatewayIntentBits,
+  Routes,
+  SelectMenuBuilder,
+} from 'discord.js';
 import { REST } from '@discordjs/rest';
 import OrderCommand from './commands/order.js';
 import RolesCommand from './commands/roles.js';
@@ -27,11 +33,20 @@ client.on('ready', () => console.log(`${client.user.tag} has logged in!`));
 
 client.on('interactionCreate', (interaction) => {
   if (interaction.isChatInputCommand()) {
-    const food = interaction.options.get('food').value;
-    const drink = interaction.options.get('drink').value;
-    interaction.reply({
-      content: `You ordered ${food} and ${drink}`,
-    });
+    if (interaction.commandName === 'order') {
+      console.log('Order Command');
+      console.log(interaction);
+      const actionRowComponent = new ActionRowBuilder().setComponents(
+        new SelectMenuBuilder().setCustomId('food_options').setOptions([
+          { label: 'Cake', value: 'cake' },
+          { label: 'Pizza', value: 'pizza' },
+          { label: 'Sushi', value: 'sushi' },
+        ])
+      );
+      interaction.reply({
+        components: [actionRowComponent.toJSON()],
+      });
+    }
   }
 });
 
